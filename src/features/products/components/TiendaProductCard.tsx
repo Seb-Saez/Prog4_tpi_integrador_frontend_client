@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Producto } from "../../../types/producto";
-import type { Categoria } from "../../../types/categoria";
+import type { Producto } from "../types/producto";
+import type { Categoria } from "../types/categoria";
 
 type TiendaProductCardProps = {
   producto: Producto;
@@ -20,7 +20,10 @@ const placeholderGradient = (name: string) => {
   return colors[hash % colors.length];
 };
 
-const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => {
+const TiendaProductCard = ({
+  producto,
+  categorias,
+}: TiendaProductCardProps) => {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !producto.imagenes_url || imgError;
 
@@ -64,9 +67,13 @@ const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => 
           </span>
         )}
 
-        <h3 className="text-lg font-bold text-gray-900 mb-1">{producto.nombre}</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">
+          {producto.nombre}
+        </h3>
 
-        <p className="text-sm text-gray-500 line-clamp-2 mb-3">{producto.descripcion}</p>
+        <p className="text-sm text-gray-500 line-clamp-2 mb-3">
+          {producto.descripcion}
+        </p>
 
         {nombresCategorias.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-3">

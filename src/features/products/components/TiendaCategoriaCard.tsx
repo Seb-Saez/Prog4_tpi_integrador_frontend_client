@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Categoria } from "../../../types/categoria";
+import type { Categoria } from "../types/categoria";
 
 type TiendaCategoriaCardProps = {
   categoria: Categoria;
@@ -44,8 +44,12 @@ const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
       )}
 
       <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900 mb-1">{categoria.nombre}</h3>
-        <p className="text-sm text-gray-500 line-clamp-2">{categoria.descripcion}</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">
+          {categoria.nombre}
+        </h3>
+        <p className="text-sm text-gray-500 line-clamp-2">
+          {categoria.descripcion}
+        </p>
       </div>
     </div>
   );

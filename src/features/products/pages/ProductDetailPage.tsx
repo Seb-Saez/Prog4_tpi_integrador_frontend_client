@@ -1,31 +1,18 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import api from "../../../api/api";
-import type { Producto } from "../../../types/producto";
-import type { Categoria } from "../../../types/categoria";
-import type { Ingrediente } from "../../../types/ingrediente";
-import { useCartStore } from "../../../store/cartStore";
+import type { Ingrediente } from "../types/ingrediente";
+import { useCartStore } from "../../cart/store/cartStore";
 import TiendaIngredienteCard from "../components/TiendaIngredienteCard";
+import { useProducto } from "../hooks/useProducto";
+import { useCategorias } from "../hooks/useCategorias";
+import { useIngredientes } from "../hooks/useIngredientes";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const addItem = useCartStore((s) => s.addItem);
 
-  const productoQuery = useQuery<Producto>({
-    queryKey: ["producto", id],
-    queryFn: () => api.get(`/productos/${id}`).then((r) => r.data),
-    enabled: !!id,
-  });
-
-  const categoriasQuery = useQuery<Categoria[]>({
-    queryKey: ["categorias"],
-    queryFn: () => api.get("/categorias").then((r) => r.data),
-  });
-
-  const ingredientesQuery = useQuery<Ingrediente[]>({
-    queryKey: ["ingredientes"],
-    queryFn: () => api.get("/ingredientes").then((r) => r.data),
-  });
+  const productoQuery = useProducto(id);
+  const categoriasQuery = useCategorias();
+  const ingredientesQuery = useIngredientes();
 
   if (productoQuery.isLoading) {
     return (
@@ -44,8 +31,8 @@ const ProductDetailPage = () => {
   }
 
   const producto = productoQuery.data;
-  const categorias = categoriasQuery.data ?? [];
-  const ingredientes = ingredientesQuery.data ?? [];
+  const categorias = Array.isArray(categoriasQuery.data) ? categoriasQuery.data : [];
+  const ingredientes = Array.isArray(ingredientesQuery.data) ? ingredientesQuery.data : [];
 
   const nombresCategorias = producto.categorias_ids
     .map((cid) => categorias.find((c) => c.id === cid)?.nombre)
@@ -66,7 +53,9 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="p-8 md:w-1/2">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{producto.nombre}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {producto.nombre}
+            </h1>
 
             {nombresCategorias.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-4">
@@ -92,7 +81,9 @@ const ProductDetailPage = () => {
               disabled={producto.stock_cantidad === 0}
               className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              {producto.stock_cantidad === 0 ? "Sin stock" : "Agregar al carrito"}
+              {producto.stock_cantidad === 0
+                ? "Sin stock"
+                : "Agregar al carrito"}
             </button>
           </div>
         </div>
@@ -100,10 +91,15 @@ const ProductDetailPage = () => {
 
       {ingredientesProducto.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Ingredientes</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Ingredientes
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ingredientesProducto.map((ingrediente) => (
-              <TiendaIngredienteCard key={ingrediente.id} ingrediente={ingrediente} />
+              <TiendaIngredienteCard
+                key={ingrediente.id}
+                ingrediente={ingrediente}
+              />
             ))}
           </div>
         </section>

@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const API_BASE = import.meta.env.VITE_API_URL;
-
-// se sube el .env para ejecutar los llamados a la api, sino es http://localhost:8000
+// El prefijo /api/v1 vive acá (no en cada service). Default para desarrollo local.
+export const API_BASE =
+  import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
 
 const api = axios.create({
   baseURL: API_BASE,

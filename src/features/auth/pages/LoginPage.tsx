@@ -1,6 +1,9 @@
 import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
+
+const inputClass =
+  "w-full rounded-xl border border-stone-300 px-4 py-2.5 text-stone-800 outline-none transition placeholder:text-stone-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,95 +21,125 @@ const LoginPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md min-h-[480px] overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-6 text-center">
-          <h1 className="text-2xl font-bold text-white">Iniciar Sesión</h1>
-          <p className="text-indigo-200 text-sm mt-1">Ingresá a tu cuenta</p>
-        </div>
+    <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-stone-200/70 bg-white shadow-xl shadow-stone-400/20">
+      {/* Cabecera con marca */}
+      <div className="bg-gradient-to-br from-amber-400 to-orange-500 px-8 py-8 text-center">
+        <span className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-white/20 ring-1 ring-white/30">
+          <svg
+            className="h-6 w-6 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+            <path d="M7 2v20" />
+            <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+          </svg>
+        </span>
+        <h1 className="font-display text-2xl font-semibold text-white">
+          Iniciar sesión
+        </h1>
+        <p className="mt-1 text-sm text-orange-50">
+          Ingresá a tu cuenta de FoodStore
+        </p>
+      </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-          className="p-6 space-y-5"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <form.Field
-              name="email"
-              validators={{
-                onChange: ({ value }) =>
-                  !value?.trim()
-                    ? { message: "El email es obligatorio" }
-                    : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                    ? { message: "Email inválido" }
-                    : undefined,
-              }}
-              children={(field) => (
-                <>
-                  <input
-                    type="email"
-                    value={field.state.value ?? ""}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                    placeholder="tu@email.com"
-                  />
-                  {field.state.meta.errors && (
-                    <p className="text-red-500 text-xs mt-1">{field.state.meta.errors[0]?.message}</p>
-                  )}
-                </>
-              )}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-            <form.Field
-              name="password"
-              validators={{
-                onChange: ({ value }) =>
-                  !value ? { message: "La contraseña es obligatoria" } : undefined,
-              }}
-              children={(field) => (
-                <>
-                  <input
-                    type="password"
-                    value={field.state.value ?? ""}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                    placeholder="Tu contraseña"
-                  />
-                  {field.state.meta.errors && (
-                    <p className="text-red-500 text-xs mt-1">{field.state.meta.errors[0]?.message}</p>
-                  )}
-                </>
-              )}
-            />
-          </div>
-
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <button
-                type="submit"
-                disabled={!canSubmit}
-                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
-              >
-                {isSubmitting ? "Ingresando..." : "Iniciar Sesión"}
-              </button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          form.handleSubmit();
+        }}
+        className="space-y-5 p-8"
+      >
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-700">
+            Email
+          </label>
+          <form.Field
+            name="email"
+            validators={{
+              onChange: ({ value }) =>
+                !value?.trim()
+                  ? { message: "El email es obligatorio" }
+                  : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+                  ? { message: "Email inválido" }
+                  : undefined,
+            }}
+            children={(field) => (
+              <>
+                <input
+                  type="email"
+                  value={field.state.value ?? ""}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={inputClass}
+                  placeholder="tu@email.com"
+                />
+                {field.state.meta.errors && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {field.state.meta.errors[0]?.message}
+                  </p>
+                )}
+              </>
             )}
           />
+        </div>
 
-          <p className="text-center text-sm text-gray-500">
-            ¿No tenés cuenta?{" "}
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-800 font-medium">
-              Registrarse
-            </Link>
-          </p>
-        </form>
-      </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-700">
+            Contraseña
+          </label>
+          <form.Field
+            name="password"
+            validators={{
+              onChange: ({ value }) =>
+                !value ? { message: "La contraseña es obligatoria" } : undefined,
+            }}
+            children={(field) => (
+              <>
+                <input
+                  type="password"
+                  value={field.state.value ?? ""}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={inputClass}
+                  placeholder="Tu contraseña"
+                />
+                {field.state.meta.errors && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {field.state.meta.errors[0]?.message}
+                  </p>
+                )}
+              </>
+            )}
+          />
+        </div>
+
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 disabled:shadow-none"
+            >
+              {isSubmitting ? "Ingresando..." : "Iniciar sesión"}
+            </button>
+          )}
+        />
+
+        <p className="text-center text-sm text-stone-500">
+          ¿No tenés cuenta?{" "}
+          <Link
+            to="/register"
+            className="font-semibold text-orange-600 hover:text-orange-700"
+          >
+            Registrate
+          </Link>
+        </p>
+      </form>
     </div>
   );
 };

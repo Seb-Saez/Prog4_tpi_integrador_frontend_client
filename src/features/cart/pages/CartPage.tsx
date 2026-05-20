@@ -1,4 +1,4 @@
-import { useCartStore } from "../../../store/cartStore";
+import { useCartStore } from "../store/cartStore";
 import { Link } from "react-router-dom";
 
 const CartPage = () => {
@@ -9,87 +9,148 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <div className="bg-gray-50 rounded-xl p-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
-          <p className="text-gray-500 mb-8">Agregá productos desde nuestra tienda.</p>
-          <Link
-            to="/"
-            className="inline-block bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <span className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-brand-100 text-brand-500">
+          <svg
+            className="h-9 w-9"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            Ver productos
-          </Link>
-        </div>
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+            <path d="M3 6h18" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </span>
+        <h2 className="font-display text-2xl font-semibold text-stone-900">
+          Tu carrito está vacío
+        </h2>
+        <p className="mb-8 mt-2 text-stone-500">
+          Agregá productos desde nuestra tienda.
+        </p>
+        <Link
+          to="/"
+          className="inline-block rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
+        >
+          Ver productos
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Carrito</h1>
+    <div className="mx-auto max-w-3xl px-4 py-8">
+      <header className="mb-8">
+        <h1 className="font-display text-3xl font-semibold text-stone-900">
+          Carrito
+        </h1>
+        <p className="mt-1 text-sm text-stone-500">
+          {items.length} {items.length === 1 ? "producto" : "productos"}
+        </p>
+      </header>
 
-      <div className="space-y-4 mb-8">
+      <div className="mb-8 space-y-3">
         {items.map((item) => (
           <div
             key={item.producto.id}
-            className="bg-white rounded-xl shadow-md p-4 flex items-center gap-4"
+            className="flex items-center gap-4 rounded-2xl border border-stone-200/70 bg-white p-4 shadow-sm"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-2xl font-bold text-white/80">
-                {item.producto.nombre.charAt(0).toUpperCase()}
-              </span>
-            </div>
+            {/* Miniatura: imagen real o inicial */}
+            {item.producto.imagenes_url ? (
+              <img
+                src={item.producto.imagenes_url}
+                alt={item.producto.nombre}
+                className="h-16 w-16 flex-shrink-0 rounded-xl object-cover"
+              />
+            ) : (
+              <div className="grid h-16 w-16 flex-shrink-0 place-items-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500">
+                <span className="text-2xl font-bold text-white/90">
+                  {item.producto.nombre.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
 
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-gray-900 truncate">{item.producto.nombre}</h3>
-              <p className="text-sm text-gray-500">
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate font-semibold text-stone-900">
+                {item.producto.nombre}
+              </h3>
+              <p className="text-sm text-stone-500">
                 ${item.producto.precio_base.toFixed(2)} c/u
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Stepper de cantidad */}
+            <div className="flex items-center gap-1 rounded-full bg-stone-100 p-1">
               <button
                 onClick={() => updateCantidad(item.producto.id, item.cantidad - 1)}
-                className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200 transition-colors"
+                className="grid h-8 w-8 place-items-center rounded-full font-semibold text-stone-600 transition-colors hover:bg-white hover:text-orange-600"
+                aria-label="Restar"
               >
-                -
+                −
               </button>
-              <span className="w-8 text-center font-semibold">{item.cantidad}</span>
+              <span className="w-8 text-center text-sm font-semibold text-stone-800">
+                {item.cantidad}
+              </span>
               <button
                 onClick={() => updateCantidad(item.producto.id, item.cantidad + 1)}
-                className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200 transition-colors"
+                className="grid h-8 w-8 place-items-center rounded-full font-semibold text-stone-600 transition-colors hover:bg-white hover:text-orange-600"
+                aria-label="Sumar"
               >
                 +
               </button>
             </div>
 
-            <div className="text-right min-w-[80px]">
-              <p className="font-bold text-gray-900">
+            <div className="min-w-[80px] text-right">
+              <p className="font-bold text-stone-900">
                 ${(item.producto.precio_base * item.cantidad).toFixed(2)}
               </p>
             </div>
 
             <button
               onClick={() => removeItem(item.producto.id)}
-              className="text-red-400 hover:text-red-600 transition-colors p-1"
+              className="rounded-lg p-1.5 text-stone-400 transition-colors hover:bg-red-50 hover:text-red-600"
               title="Eliminar"
+              aria-label="Eliminar"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
             </button>
           </div>
         ))}
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-lg font-semibold text-gray-900">Total</span>
-          <span className="text-3xl font-bold text-indigo-600">${total().toFixed(2)}</span>
+      {/* Resumen */}
+      <div className="rounded-2xl border border-stone-200/70 bg-white p-6 shadow-sm">
+        <div className="mb-5 flex items-center justify-between">
+          <span className="text-lg font-semibold text-stone-700">Total</span>
+          <span className="font-display text-3xl font-semibold text-brand-600">
+            ${total().toFixed(2)}
+          </span>
         </div>
-        <button className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+        <button className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]">
           Confirmar pedido
         </button>
+        <Link
+          to="/"
+          className="mt-3 block text-center text-sm font-medium text-stone-500 hover:text-stone-800"
+        >
+          Seguir comprando
+        </Link>
       </div>
     </div>
   );

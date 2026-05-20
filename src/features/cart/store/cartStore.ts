@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Producto } from "../types/producto";
+import type { Producto } from "../../products/types/producto";
 
 export type CartItem = {
   producto: Producto;
@@ -26,7 +26,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         items: items.map((item) =>
           item.producto.id === producto.id
             ? { ...item, cantidad: item.cantidad + 1 }
-            : item
+            : item,
         ),
       });
     } else {
@@ -35,7 +35,9 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   removeItem: (productoId) => {
-    set({ items: get().items.filter((item) => item.producto.id !== productoId) });
+    set({
+      items: get().items.filter((item) => item.producto.id !== productoId),
+    });
   },
 
   updateCantidad: (productoId, cantidad) => {
@@ -45,7 +47,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
     set({
       items: get().items.map((item) =>
-        item.producto.id === productoId ? { ...item, cantidad } : item
+        item.producto.id === productoId ? { ...item, cantidad } : item,
       ),
     });
   },
@@ -55,7 +57,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   total: () => {
     return get().items.reduce(
       (acc, item) => acc + item.producto.precio_base * item.cantidad,
-      0
+      0,
     );
   },
 }));

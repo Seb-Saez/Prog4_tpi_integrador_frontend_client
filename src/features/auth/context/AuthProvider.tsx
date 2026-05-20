@@ -1,23 +1,15 @@
-import { createContext, useState, useEffect, useCallback, type ReactNode } from "react";
-import type { usuarioPublico, usuariosLogin, usuariosRegister } from "../types/usuario";
-import * as authService from "../services/authService";
-
-type AuthContextType = {
-  user: usuarioPublico | null;
-  isLoading: boolean;
-  login: (data: usuariosLogin) => Promise<void>;
-  register: (data: usuariosRegister) => Promise<void>;
-  logout: () => Promise<void>;
-};
-
-export const AuthContext = createContext<AuthContextType | null>(null);
+import { useState, useEffect, useCallback, type ReactNode } from "react";
+import type { usuariosLogin, usuariosRegister, usuarioPublico } from "../types/usuario";
+import * as authService from "../api/authService";
+import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<usuarioPublico | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    authService.getCurrentUser()
+    authService
+      .getCurrentUser()
       .then((u) => {
         setUser(u);
       })
