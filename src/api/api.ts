@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// El prefijo /api/v1 vive acá (no en cada service). Default para desarrollo local.
+// API_BASE sin /api/v1 — el backend expone auth con ese prefijo y el resto sin él.
 export const API_BASE =
-  import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
+  import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 const api = axios.create({
   baseURL: API_BASE,

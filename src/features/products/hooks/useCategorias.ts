@@ -7,6 +7,6 @@ export const categoriasQueryKey = ["categorias"] as const;
 export function useCategorias() {
   return useQuery({
     queryKey: categoriasQueryKey,
-    queryFn: getCategorias,
+    queryFn: () => getCategorias(),
   });
 }

@@ -6,6 +6,6 @@ export const ingredientesQueryKey = ["ingredientes"] as const;
 export function useIngredientes() {
   return useQuery({
     queryKey: ingredientesQueryKey,
-    queryFn: getIngredientes,
+    queryFn: () => getIngredientes(),
   });
 }

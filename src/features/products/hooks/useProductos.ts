@@ -7,6 +7,6 @@ export const productosQueryKey = ["productos"] as const;
 export function useProductos() {
   return useQuery({
     queryKey: productosQueryKey,
-    queryFn: getProductos,
+    queryFn: () => getProductos(),
   });
 }
