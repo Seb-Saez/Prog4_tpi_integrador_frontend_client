@@ -1,5 +1,6 @@
 import { useCartStore } from "../store/cartStore";
 import { Link } from "react-router-dom";
+import { ROUTES } from "@/router/routes";
 
 const CartPage = () => {
   const items = useCartStore((s) => s.items);
@@ -10,7 +11,7 @@ const CartPage = () => {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <span className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-brand-100 text-brand-500">
+        <span className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-3xl bg-orange-100 text-orange-500">
           <svg
             className="h-9 w-9"
             viewBox="0 0 24 24"
@@ -33,7 +34,7 @@ const CartPage = () => {
           Agregá productos desde nuestra tienda.
         </p>
         <Link
-          to="/"
+          to={ROUTES.INICIO}
           className="inline-block rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
         >
           Ver productos
@@ -138,7 +139,7 @@ const CartPage = () => {
       <div className="rounded-2xl border border-stone-200/70 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between">
           <span className="text-lg font-semibold text-stone-700">Total</span>
-          <span className="font-display text-3xl font-semibold text-brand-600">
+          <span className="font-display text-3xl font-semibold text-orange-600">
             ${total().toFixed(2)}
           </span>
         </div>
@@ -146,7 +147,7 @@ const CartPage = () => {
           Confirmar pedido
         </button>
         <Link
-          to="/"
+          to={ROUTES.INICIO}
           className="mt-3 block text-center text-sm font-medium text-stone-500 hover:text-stone-800"
         >
           Seguir comprando

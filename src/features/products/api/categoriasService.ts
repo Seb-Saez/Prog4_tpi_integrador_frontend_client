@@ -5,6 +5,10 @@ export function getCategorias(params?: Record<string, string | number | boolean 
   return api.get<Categoria[]>("/categorias", { params }).then((r) => r.data);
 }
 
+export function getCategoria(id: string) {
+  return api.get<Categoria>(`/categorias/${id}`).then((r) => r.data);
+}
+
 export function createCategoria(data: Omit<Categoria, "id">) {
   return api.post<Categoria>("/categorias", data).then((r) => r.data);
 }

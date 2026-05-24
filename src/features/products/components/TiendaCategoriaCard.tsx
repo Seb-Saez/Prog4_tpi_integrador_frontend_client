@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { Categoria } from "../types/categoria";
-
+import { categoriaDetalle } from "@/router/routes";
 type TiendaCategoriaCardProps = {
   categoria: Categoria;
 };
-
 const placeholderGradient = (name: string) => {
   const colors = [
     "from-indigo-400 to-purple-500",
@@ -17,13 +17,14 @@ const placeholderGradient = (name: string) => {
   const hash = name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
-
 const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !categoria.imagen_url || imgError;
-
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
+    <Link
+      to={categoriaDetalle(categoria.id)}
+      className="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+    >
       {showPlaceholder ? (
         <div
           className={`h-40 bg-gradient-to-br ${placeholderGradient(categoria.nombre)} flex items-center justify-center`}
@@ -42,7 +43,6 @@ const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
           />
         </div>
       )}
-
       <div className="p-5">
         <h3 className="text-lg font-bold text-gray-900 mb-1">
           {categoria.nombre}
@@ -51,8 +51,7 @@ const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
           {categoria.descripcion}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
-
 export default TiendaCategoriaCard;

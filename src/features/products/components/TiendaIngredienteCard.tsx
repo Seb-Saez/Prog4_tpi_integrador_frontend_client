@@ -6,7 +6,7 @@ type TiendaIngredienteCardProps = {
 
 const TiendaIngredienteCard = ({ ingrediente }: TiendaIngredienteCardProps) => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-5 border-l-4 border-indigo-500">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 p-5 border-l-4 border-orange-400">
       <div className="flex items-start justify-between mb-2">
         <h3 className="text-lg font-bold text-gray-900">
           {ingrediente.nombre}
