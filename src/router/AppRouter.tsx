@@ -18,6 +18,8 @@ import CartPage from "@/features/cart/pages/CartPage";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
 import OrdersPage from "@/features/orders/pages/OrdersPage";
+import OrderDetailPage from "@/features/orders/pages/OrderDetailPage";
+import DireccionesPage from "@/features/direcciones/pages/DireccionesPage";
 
 export function AppRouter() {
   return (
@@ -32,6 +34,8 @@ export function AppRouter() {
           <Route path={ROUTES.CATEGORIA_DETALLE} element={<CategoryDetailPage />} />
           <Route path={ROUTES.CARRITO} element={<CartPage />} />
           <Route path={ROUTES.PEDIDOS} element={<OrdersPage />} />
+          <Route path={ROUTES.PEDIDO_DETALLE} element={<OrderDetailPage />} />
+          <Route path={ROUTES.DIRECCIONES} element={<DireccionesPage />} />
         </Route>
       </Route>
 

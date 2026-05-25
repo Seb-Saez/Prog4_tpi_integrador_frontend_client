@@ -1,5 +1,7 @@
-import { useCartStore } from "../store/cartStore";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useCartStore } from "../store/cartStore";
+import CheckoutModal from "../components/CheckoutModal";
 import { ROUTES } from "@/router/routes";
 
 const CartPage = () => {
@@ -7,6 +9,7 @@ const CartPage = () => {
   const updateCantidad = useCartStore((s) => s.updateCantidad);
   const removeItem = useCartStore((s) => s.removeItem);
   const total = useCartStore((s) => s.total);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   if (items.length === 0) {
     return (
@@ -143,7 +146,10 @@ const CartPage = () => {
             ${total().toFixed(2)}
           </span>
         </div>
-        <button className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]">
+        <button
+          onClick={() => setCheckoutOpen(true)}
+          className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
+        >
           Confirmar pedido
         </button>
         <Link
@@ -153,6 +159,8 @@ const CartPage = () => {
           Seguir comprando
         </Link>
       </div>
+
+      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 };
