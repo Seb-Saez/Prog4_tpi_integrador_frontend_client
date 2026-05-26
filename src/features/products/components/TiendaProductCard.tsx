@@ -1,6 +1,8 @@
 import { useState } from "react";
-import type { Producto } from "../../../types/producto";
-import type { Categoria } from "../../../types/categoria";
+import { Link } from "react-router-dom";
+import type { Producto } from "../types/producto";
+import type { Categoria } from "../types/categoria";
+import { productoDetalle } from "@/router/routes";
 
 type TiendaProductCardProps = {
   producto: Producto;
@@ -20,7 +22,10 @@ const placeholderGradient = (name: string) => {
   return colors[hash % colors.length];
 };
 
-const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => {
+const TiendaProductCard = ({
+  producto,
+  categorias,
+}: TiendaProductCardProps) => {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !producto.imagenes_url || imgError;
 
@@ -29,7 +34,10 @@ const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => 
     .filter(Boolean);
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+    <Link
+      to={productoDetalle(producto.id)}
+      className="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+    >
       {showPlaceholder ? (
         <div
           className={`h-48 bg-gradient-to-br ${placeholderGradient(producto.nombre)} flex items-center justify-center`}
@@ -48,7 +56,6 @@ const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => 
           />
         </div>
       )}
-
       <div className="p-5">
         {producto.stock_cantidad === 0 ? (
           <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full mb-2">
@@ -63,11 +70,12 @@ const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => 
             Disponible
           </span>
         )}
-
-        <h3 className="text-lg font-bold text-gray-900 mb-1">{producto.nombre}</h3>
-
-        <p className="text-sm text-gray-500 line-clamp-2 mb-3">{producto.descripcion}</p>
-
+        <h3 className="text-lg font-bold text-gray-900 mb-1">
+          {producto.nombre}
+        </h3>
+        <p className="text-sm text-gray-500 line-clamp-2 mb-3">
+          {producto.descripcion}
+        </p>
         {nombresCategorias.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {nombresCategorias.map((cat) => (
@@ -80,15 +88,13 @@ const TiendaProductCard = ({ producto, categorias }: TiendaProductCardProps) => 
             ))}
           </div>
         )}
-
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <span className="text-2xl font-bold text-indigo-600">
             ${producto.precio_base.toFixed(2)}
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
-
 export default TiendaProductCard;

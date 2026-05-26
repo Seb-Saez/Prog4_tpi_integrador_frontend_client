@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+@theme {
+  /* === Marca: paleta cálida y apetecible (food store) === */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+
+  /* Superficie base cálida (crema) */
+  --color-surface: #fffdf9;
+
+  /* Tipografía de marca (logos / títulos) */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: #292524; /* stone-800 */
+  }
+}
