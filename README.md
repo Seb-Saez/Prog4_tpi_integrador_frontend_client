@@ -24,6 +24,7 @@ El proyecto requiere un archivo `.env` en la raíz del proyecto. Podés copiar e
 
 
 ## Estructura de Carpetas
+```
 src/
   api/                  
     api.ts              # Instancia base de axios con baseURL
@@ -61,6 +62,7 @@ src/
     usuario.ts
   router/               # Configuración de rutas
     AppRouter.tsx       # Definición de todas las rutas
+```
 Tecnologías Utilizadas
 - React 19 + TypeScript - UI y tipado
 - Vite - Build tool y dev server
