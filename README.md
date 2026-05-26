@@ -26,42 +26,17 @@ El proyecto requiere un archivo `.env` en la raíz del proyecto. Podés copiar e
 ## Estructura de Carpetas
 ```
 src/
-  api/                  
-    api.ts              # Instancia base de axios con baseURL
+  api/                  # Instancia base de axios con baseURL       
   components/           # Componentes compartidos
-    Navbar/             # Navegación principal
-    ProtectedRoute/     # Rutas protegidas/públicas
   context/              # Contextos de React
-    AuthContext.tsx     # Manejo de sesión de usuario
+  config/               # Configuracion global de las env
   features/             # Módulos por dominio (feature-based)
     auth/               # Autenticación (login, registro)
-      pages/
-        LoginPage.tsx
-        RegisterPage.tsx
     products/           # Catálogo de productos
-      components/       # Cards de productos/categorías
-      pages/
-        ProductListPage.tsx    # Listado con filtros
-        ProductDetailPage.tsx  # Detalle con ingredientes
     cart/               # Carrito de compras
-      pages/
-        CartPage.tsx     # Gestión del carrito
-    orders/             # Pedidos del usuario
-      pages/
-        OrdersPage.tsx   # Historial de pedidos
+    pedidos/            # Pedidos del usuario
   hooks/                # Custom hooks
-    useAuth.ts          # Hook para acceder a AuthContext
-  services/             # Llamadas a la API
-    authService.ts      # Login, register, logout, me
-  store/                # Estado global (Zustand)
-    cartStore.ts        # Carrito de compras
-  types/                # Interfaces TypeScript
-    producto.ts
-    categoria.ts
-    ingrediente.ts
-    usuario.ts
   router/               # Configuración de rutas
-    AppRouter.tsx       # Definición de todas las rutas
 ```
 Tecnologías Utilizadas
 - React 19 + TypeScript - UI y tipado
