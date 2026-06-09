@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
-import { useCrearPedido } from "@/features/orders/hooks/useCrearPedido";
+import { useCrearPedido } from "@/features/pedido/hooks/useCrearPedido";
 import { useDirecciones } from "@/features/direcciones/hooks/useDirecciones";
 import { ROUTES } from "@/router/routes";
-import type { PedidoCreate, ModalidadEntrega } from "@/features/orders/types/pedido";
+import type { PedidoCreate, ModalidadEntrega } from "@/features/pedido/types/pedido";
 
 const FORMAS_PAGO = [
   { id: 1, nombre: "Efectivo" },

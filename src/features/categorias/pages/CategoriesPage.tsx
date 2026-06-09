@@ -1,5 +1,5 @@
-import { useCategorias } from "@/features/products/hooks/useCategoria";
-import TiendaCategoriaCard from "@/features/products/components/TiendaCategoriaCard";
+import { useCategorias } from "@/features/productos/hooks/useCategoria";
+import TiendaCategoriaCard from "@/features/productos/components/TiendaCategoriaCard";
 const CategoriesPage = () => {
   const categoriasQuery = useCategorias();
   if (categoriasQuery.isLoading) {

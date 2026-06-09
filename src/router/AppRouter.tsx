@@ -10,15 +10,15 @@ import { RequireAuth } from "@/features/auth/guards/RequireAuth";
 import { GuestOnly } from "@/features/auth/guards/GuestOnly";
 
 // páginas
-import ProductListPage from "@/features/products/pages/ProductListPage";
-import ProductDetailPage from "@/features/products/pages/ProductDetailPage";
+import ProductListPage from "@/features/productos/pages/ProductListPage";
+import ProductDetailPage from "@/features/productos/pages/ProductDetailPage";
 import CategoriesPage from "@/features/categorias/pages/CategoriesPage";
 import CategoryDetailPage from "@/features/categorias/pages/CategoryDetailPage";
 import CartPage from "@/features/cart/pages/CartPage";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
-import OrdersPage from "@/features/orders/pages/OrdersPage";
-import OrderDetailPage from "@/features/orders/pages/OrderDetailPage";
+import OrdersPage from "@/features/pedido/pages/OrdersPage";
+import OrderDetailPage from "@/features/pedido/pages/OrderDetailPage";
 import DireccionesPage from "@/features/direcciones/pages/DireccionesPage";
 
 export function AppRouter() {
