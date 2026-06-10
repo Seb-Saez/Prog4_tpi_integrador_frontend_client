@@ -25,6 +25,8 @@ export function useOrderStatusWS(pedidoId: number | undefined) {
   };
 
   const connect = () => {
+    // evita que un timeout stale de un socket anterior mate al nuevo
+    clearTimeout(timerRef.current);
     wsRef.current?.close();
     setStatus("connecting");
     subscribedRef.current = false;
@@ -59,7 +61,11 @@ export function useOrderStatusWS(pedidoId: number | undefined) {
 
       ws.onclose = () => {
         setStatus("disconnected");
-        scheduleReconnect();
+        // solo reconecta si este socket sigue siendo el actual;
+        // si fue cerrado por unmount/reconnect intencional, no reintentamos
+        if (wsRef.current === ws) {
+          scheduleReconnect();
+        }
       };
 
       ws.onerror = () => {
@@ -78,12 +84,17 @@ export function useOrderStatusWS(pedidoId: number | undefined) {
       clearTimeout(timerRef.current);
 
       if (wsRef.current && subscribedRef.current && pedidoId) {
-        wsRef.current.send(
-          JSON.stringify({ action: "unsubscribe-order", order_id: pedidoId }),
-        );
+        try {
+          wsRef.current.send(
+            JSON.stringify({ action: "unsubscribe-order", order_id: pedidoId }),
+          );
+        } catch {
+          // ignore send on closing socket
+        }
       }
 
       wsRef.current?.close();
+      wsRef.current = null; // null ref para que onclose stale no reintente
     };
     // reconnect when pedidoId changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
