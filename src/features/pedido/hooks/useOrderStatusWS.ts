@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { env } from "@/config/env";
 import { usePedidoWsStore } from "../store/pedidoWsStore";
 
-const WS_URL = env.apiUrl.replace(/^http/, "ws") + "/ws/pedidos";
+const WS_URL = "ws://localhost:8000/ws/pedidos";
 const RECONNECT_BASE_MS = 2_000;
 const RECONNECT_MAX_MS = 30_000;
 
