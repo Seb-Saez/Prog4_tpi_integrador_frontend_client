@@ -1,6 +1,8 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { usePedido } from "../hooks/usePedido";
 import { useCancelarPedido } from "../hooks/useCancelarPedido";
+import { useOrderStatusWS } from "../hooks/useOrderStatusWS";
+import { usePedidoWsStore } from "../store/pedidoWsStore";
 import { ROUTES } from "@/router/routes";
 
 const estadoColores: Record<string, string> = {
@@ -36,6 +38,8 @@ const OrderDetailPage = () => {
   const navigate = useNavigate();
   const pedidoQuery = usePedido(id);
   const cancelar = useCancelarPedido();
+  useOrderStatusWS(id ? Number(id) : undefined);
+  const wsStatus = usePedidoWsStore((s) => s.status);
 
   if (pedidoQuery.isLoading) {
     return (
@@ -79,9 +83,35 @@ const OrderDetailPage = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
           <div>
-            <h1 className="font-display text-2xl font-bold text-stone-900">
-              Pedido #{pedido.id}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-display text-2xl font-bold text-stone-900">
+                Pedido #{pedido.id}
+              </h1>
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                  wsStatus === "connected"
+                    ? "bg-green-50 text-green-600"
+                    : wsStatus === "connecting"
+                      ? "bg-yellow-50 text-yellow-600"
+                      : "bg-red-50 text-red-600"
+                }`}
+              >
+                <span
+                  className={`w-1 h-1 rounded-full ${
+                    wsStatus === "connected"
+                      ? "bg-green-500"
+                      : wsStatus === "connecting"
+                        ? "bg-yellow-500 animate-pulse"
+                        : "bg-red-500"
+                  }`}
+                />
+                {wsStatus === "connected"
+                  ? "En vivo"
+                  : wsStatus === "connecting"
+                    ? "Conectando…"
+                    : "Desconectado"}
+              </span>
+            </div>
             <p className="text-sm text-stone-400 mt-1">
               {formatearFecha(pedido.created_at)}
             </p>

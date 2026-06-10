@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMisPedidos } from "../hooks/useMisPedidos";
+import { useOrderStatusWS } from "../hooks/useOrderStatusWS";
+import { usePedidoWsStore } from "../store/pedidoWsStore";
 import { pedidoDetalle } from "@/router/routes";
 
 const estadoColores: Record<string, string> = {
@@ -32,6 +34,8 @@ const formatearMoneda = (val: string) => {
 
 const OrdersPage = () => {
   const pedidosQuery = useMisPedidos();
+  useOrderStatusWS(undefined);
+  const wsStatus = usePedidoWsStore((s) => s.status);
 
   if (pedidosQuery.isLoading) {
     return (
@@ -53,9 +57,35 @@ const OrdersPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="font-display text-3xl font-bold text-stone-900 mb-8">
-        Mis Pedidos
-      </h1>
+      <div className="flex items-center gap-3 mb-8">
+        <h1 className="font-display text-3xl font-bold text-stone-900">
+          Mis Pedidos
+        </h1>
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+            wsStatus === "connected"
+              ? "bg-green-50 text-green-600"
+              : wsStatus === "connecting"
+                ? "bg-yellow-50 text-yellow-600"
+                : "bg-red-50 text-red-600"
+          }`}
+        >
+          <span
+            className={`w-1 h-1 rounded-full ${
+              wsStatus === "connected"
+                ? "bg-green-500"
+                : wsStatus === "connecting"
+                  ? "bg-yellow-500 animate-pulse"
+                  : "bg-red-500"
+            }`}
+          />
+          {wsStatus === "connected"
+            ? "En vivo"
+            : wsStatus === "connecting"
+              ? "Conectando…"
+              : "Desconectado"}
+        </span>
+      </div>
 
       {pedidos.length === 0 ? (
         <div className="text-center py-12 bg-stone-50 rounded-xl border border-stone-100">
