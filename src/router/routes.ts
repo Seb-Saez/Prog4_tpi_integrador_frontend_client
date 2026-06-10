@@ -14,6 +14,9 @@ export const ROUTES = {
     // Solo invitados
     INGRESAR: "/login",
     REGISTRO: "/register",
+    // Pública sin guard — destino de rebote para usuarios sin rol CLIENTE.
+    // No puede tener guard (ni GuestOnly) o se genera un loop de redirección.
+    SIN_ACCESO: "/sin-acceso",
   } as const;
   // helpers para construir URLs con id real (links / navigate)
   export const productoDetalle = (id: number | string) => `/productos/${id}`;

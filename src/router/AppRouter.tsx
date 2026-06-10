@@ -7,6 +7,7 @@ import AuthLayout from "@/components/layout/AuthLayout/AuthLayout";
 
 // guards
 import { RequireAuth } from "@/features/auth/guards/RequireAuth";
+import { RequireCliente } from "@/features/auth/guards/RequireCliente";
 import { GuestOnly } from "@/features/auth/guards/GuestOnly";
 
 // páginas
@@ -20,24 +21,30 @@ import RegisterPage from "@/features/auth/pages/RegisterPage";
 import OrdersPage from "@/features/pedido/pages/OrdersPage";
 import OrderDetailPage from "@/features/pedido/pages/OrderDetailPage";
 import DireccionesPage from "@/features/direcciones/pages/DireccionesPage";
+import SinAccesoPage from "@/features/auth/pages/SinAccesoPage";
 
 export function AppRouter() {
   return (
     <Routes>
-      {/* Rutas protegidas - Requieren sesión */}
+      {/* Rutas protegidas - Requieren sesión (RequireAuth) y rol CLIENTE (RequireCliente) */}
       <Route element={<RequireAuth />}>
-        <Route element={<MainLayout />}>
-          <Route path={ROUTES.INICIO} element={<ProductListPage />} />
-          <Route path={ROUTES.PRODUCTOS} element={<ProductListPage />} />
-          <Route path={ROUTES.PRODUCTO_DETALLE} element={<ProductDetailPage />} />
-          <Route path={ROUTES.CATEGORIAS} element={<CategoriesPage />} />
-          <Route path={ROUTES.CATEGORIA_DETALLE} element={<CategoryDetailPage />} />
-          <Route path={ROUTES.CARRITO} element={<CartPage />} />
-          <Route path={ROUTES.PEDIDOS} element={<OrdersPage />} />
-          <Route path={ROUTES.PEDIDO_DETALLE} element={<OrderDetailPage />} />
-          <Route path={ROUTES.DIRECCIONES} element={<DireccionesPage />} />
+        <Route element={<RequireCliente />}>
+          <Route element={<MainLayout />}>
+            <Route path={ROUTES.INICIO} element={<ProductListPage />} />
+            <Route path={ROUTES.PRODUCTOS} element={<ProductListPage />} />
+            <Route path={ROUTES.PRODUCTO_DETALLE} element={<ProductDetailPage />} />
+            <Route path={ROUTES.CATEGORIAS} element={<CategoriesPage />} />
+            <Route path={ROUTES.CATEGORIA_DETALLE} element={<CategoryDetailPage />} />
+            <Route path={ROUTES.CARRITO} element={<CartPage />} />
+            <Route path={ROUTES.PEDIDOS} element={<OrdersPage />} />
+            <Route path={ROUTES.PEDIDO_DETALLE} element={<OrderDetailPage />} />
+            <Route path={ROUTES.DIRECCIONES} element={<DireccionesPage />} />
+          </Route>
         </Route>
       </Route>
+
+      {/* Pública sin guard - destino de rebote para roles no-CLIENTE */}
+      <Route path={ROUTES.SIN_ACCESO} element={<SinAccesoPage />} />
 
       {/* Rutas Auth - Solo para invitados */}
       <Route element={<GuestOnly />}>
