@@ -19,7 +19,7 @@ export function RequireCliente() {
   return (
     <Guard
       isLoading={isLoading}
-      isAllowed={user?.role === "CLIENTE"}
+      isAllowed={user?.roles?.includes("CLIENTE") ?? false}
       redirectTo={ROUTES.SIN_ACCESO}
     />
   );
