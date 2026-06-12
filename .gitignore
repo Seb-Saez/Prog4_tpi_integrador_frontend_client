@@ -25,6 +25,7 @@ dist-ssr
 *.sw?
 openspec/
 .atl/
+.pnpm-store/
 # Logs
 logs
 *.log
