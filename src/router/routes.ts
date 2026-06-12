@@ -14,6 +14,8 @@ export const ROUTES = {
     // Solo invitados
     INGRESAR: "/login",
     REGISTRO: "/register",
+    // Pública — destino de redirección post-pago (MercadoPago back_urls)
+    PAGO_RESULTADO: "/pago/resultado",
     // Pública sin guard — destino de rebote para usuarios sin rol CLIENTE.
     // No puede tener guard (ni GuestOnly) o se genera un loop de redirección.
     SIN_ACCESO: "/sin-acceso",

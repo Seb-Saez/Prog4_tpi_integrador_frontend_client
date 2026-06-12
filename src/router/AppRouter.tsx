@@ -22,6 +22,7 @@ import OrdersPage from "@/features/pedido/pages/OrdersPage";
 import OrderDetailPage from "@/features/pedido/pages/OrderDetailPage";
 import DireccionesPage from "@/features/direcciones/pages/DireccionesPage";
 import SinAccesoPage from "@/features/auth/pages/SinAccesoPage";
+import PagoResultadoPage from "@/features/pago/pages/PagoResultadoPage";
 
 export function AppRouter() {
   return (
@@ -45,6 +46,9 @@ export function AppRouter() {
 
       {/* Pública sin guard - destino de rebote para roles no-CLIENTE */}
       <Route path={ROUTES.SIN_ACCESO} element={<SinAccesoPage />} />
+
+      {/* Pública - destino de back_urls de MercadoPago (sin guard, viene de redirect externo) */}
+      <Route path={ROUTES.PAGO_RESULTADO} element={<PagoResultadoPage />} />
 
       {/* Rutas Auth - Solo para invitados */}
       <Route element={<GuestOnly />}>
