@@ -25,12 +25,6 @@ dist-ssr
 *.sw?
 openspec/
 .atl/
-<<<<<<< Updated upstream
-Dockerfile
-=======
-
-
-
 # Logs
 logs
 *.log
@@ -85,4 +79,3 @@ Parcial 2.pdf
 docs/
 
 *.atl
->>>>>>> Stashed changes
