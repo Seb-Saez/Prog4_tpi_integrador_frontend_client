@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { usePedido } from "../hooks/usePedido";
 import { useCancelarPedido } from "../hooks/useCancelarPedido";
 import { useOrderStatusWS } from "../hooks/useOrderStatusWS";
@@ -35,7 +35,6 @@ const formatearMoneda = (val: string) => {
 
 const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const pedidoQuery = usePedido(id);
   const cancelar = useCancelarPedido();
   useOrderStatusWS(id ? Number(id) : undefined);

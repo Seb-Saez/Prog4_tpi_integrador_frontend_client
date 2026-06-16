@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { useProductos } from "../hooks/useProductos";
 import { useCategorias } from "../hooks/useCategoria";
+import { useIngredientes } from "../hooks/useIngredientes";
 import TiendaProductCard from "../components/TiendaProductCard";
+import ProductListSkeleton from "../components/ProductListSkeleton";
+
 const ProductListPage = () => {
   const productosQuery = useProductos();
   const categoriasQuery = useCategorias();
+  // Fetched here so the allergen badge works on list cards.
+  // react-query deduplicates this request — if ProductDetailPage was visited
+  // first, the data is served from cache at zero cost.
+  const ingredientesQuery = useIngredientes();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoria, setSelectedCategoria] = useState("");
+
   if (productosQuery.isLoading || categoriasQuery.isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-      </div>
-    );
+    return <ProductListSkeleton />;
   }
+
   if (productosQuery.isError || categoriasQuery.isError) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -21,8 +27,16 @@ const ProductListPage = () => {
       </div>
     );
   }
+
   const productos = Array.isArray(productosQuery.data) ? productosQuery.data : [];
   const categorias = Array.isArray(categoriasQuery.data) ? categoriasQuery.data : [];
+  const ingredientes = Array.isArray(ingredientesQuery.data) ? ingredientesQuery.data : [];
+
+  // Build a Set of allergen ingredient IDs for O(1) lookup per product.
+  const alergenoIds = new Set(
+    ingredientes.filter((i) => i.es_alergeno).map((i) => i.id),
+  );
+
   const productosFiltrados = productos.filter((producto) => {
     const matchesSearch = producto.nombre
       .toLowerCase()
@@ -32,12 +46,13 @@ const ProductListPage = () => {
       producto.categorias_ids.includes(Number(selectedCategoria));
     return matchesSearch && matchesCategoria;
   });
+
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         Nuestros Productos
       </h1>
-      {/* Barra de filtros */}
+      {/* Filter bar */}
       <div className="mb-8 flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <input
@@ -63,6 +78,7 @@ const ProductListPage = () => {
           </select>
         </div>
       </div>
+
       {productosFiltrados.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-xl">
           <p className="text-gray-500 text-lg">
@@ -76,6 +92,10 @@ const ProductListPage = () => {
               key={producto.id}
               producto={producto}
               categorias={categorias}
+              hasAllergens={
+                ingredientesQuery.isSuccess &&
+                producto.ingredientes_ids.some((id) => alergenoIds.has(id))
+              }
             />
           ))}
         </div>

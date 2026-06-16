@@ -12,7 +12,7 @@ export function useOrderStatusWS(pedidoId: number | undefined) {
   const queryClient = useQueryClient();
   const wsRef = useRef<WebSocket | null>(null);
   const retryRef = useRef(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const subscribedRef = useRef(false);
 
   const scheduleReconnect = () => {

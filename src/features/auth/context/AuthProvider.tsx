@@ -1,44 +1,17 @@
-import { useState, useEffect, useCallback, type ReactNode } from "react";
-import type { usuariosLogin, usuariosRegister, usuarioPublico } from "../types/usuario";
-import * as authService from "../api/authService";
-import { AuthContext } from "./AuthContext";
+import { useEffect, type ReactNode } from "react";
+import { useAuthStore } from "../store/authStore";
 
+/**
+ * Thin bootstrapper: calls store.hydrate() once on mount to fetch the current
+ * session from the backend. No state lives here — all state lives in authStore.
+ * Keep this wrapper in App.tsx so hydration fires before any guard renders.
+ */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<usuarioPublico | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const hydrate = useAuthStore((s) => s.hydrate);
 
   useEffect(() => {
-    authService
-      .getCurrentUser()
-      .then((u) => {
-        setUser(u);
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    hydrate();
+  }, [hydrate]);
 
-  const login = useCallback(async (data: usuariosLogin) => {
-    await authService.login(data);
-    const currentUser = await authService.getCurrentUser();
-    setUser(currentUser);
-  }, []);
-
-  const register = useCallback(async (data: usuariosRegister) => {
-    await authService.register(data);
-  }, []);
-
-  const logout = useCallback(async () => {
-    await authService.logout();
-    setUser(null);
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <>{children}</>;
 }

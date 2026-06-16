@@ -47,6 +47,9 @@ export interface PedidoResumen {
   costo_envio: string;
   total: string;
   created_at: string;
+  // Optional: the list endpoint omits line items, but the detail response
+  // (PedidoResponse) includes them. Kept optional so shared UI can read it safely.
+  detalles?: DetallePedidoOut[];
 }
 
 export interface PedidoResponse extends PedidoResumen {

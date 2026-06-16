@@ -7,6 +7,8 @@ import { productoDetalle } from "@/router/routes";
 type TiendaProductCardProps = {
   producto: Producto;
   categorias: Categoria[];
+  /** True when at least one of the product's ingredients is an allergen. */
+  hasAllergens?: boolean;
 };
 
 const placeholderGradient = (name: string) => {
@@ -25,6 +27,7 @@ const placeholderGradient = (name: string) => {
 const TiendaProductCard = ({
   producto,
   categorias,
+  hasAllergens = false,
 }: TiendaProductCardProps) => {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !producto.imagenes_url || imgError;
@@ -57,19 +60,40 @@ const TiendaProductCard = ({
         </div>
       )}
       <div className="p-5">
-        {producto.stock_cantidad === 0 ? (
-          <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full mb-2">
-            Sin stock
-          </span>
-        ) : producto.stock_cantidad <= 5 ? (
-          <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full mb-2">
-            Quedan {producto.stock_cantidad}
-          </span>
-        ) : (
-          <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full mb-2">
-            Disponible
-          </span>
-        )}
+        <div className="flex flex-wrap items-center gap-1.5 mb-2">
+          {producto.stock_cantidad === 0 ? (
+            <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full">
+              Sin stock
+            </span>
+          ) : producto.stock_cantidad <= 5 ? (
+            <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full">
+              Quedan {producto.stock_cantidad}
+            </span>
+          ) : (
+            <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full">
+              Disponible
+            </span>
+          )}
+          {hasAllergens && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full">
+              <svg
+                className="w-3 h-3 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              Alérgenos
+            </span>
+          )}
+        </div>
         <h3 className="text-lg font-bold text-gray-900 mb-1">
           {producto.nombre}
         </h3>
