@@ -30,7 +30,7 @@ const TiendaProductCard = ({
   hasAllergens = false,
 }: TiendaProductCardProps) => {
   const [imgError, setImgError] = useState(false);
-  const showPlaceholder = !producto.imagenes_url || imgError;
+  const showPlaceholder = !producto.imagenes_url?.[0] || imgError;
 
   const nombresCategorias = producto.categorias_ids
     .map((id) => categorias.find((c) => c.id === id)?.nombre)
@@ -52,7 +52,7 @@ const TiendaProductCard = ({
       ) : (
         <div className="h-48 overflow-hidden">
           <img
-            src={producto.imagenes_url}
+            src={producto.imagenes_url?.[0]}
             alt={producto.nombre}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={() => setImgError(true)}

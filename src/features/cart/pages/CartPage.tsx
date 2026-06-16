@@ -64,9 +64,9 @@ const CartPage = () => {
             className="flex items-center gap-4 rounded-2xl border border-stone-200/70 bg-white p-4 shadow-sm"
           >
             {/* Miniatura: imagen real o inicial */}
-            {item.producto.imagenes_url ? (
+            {item.producto.imagenes_url?.[0] ? (
               <img
-                src={item.producto.imagenes_url}
+                src={item.producto.imagenes_url[0]}
                 alt={item.producto.nombre}
                 className="h-16 w-16 flex-shrink-0 rounded-xl object-cover"
               />

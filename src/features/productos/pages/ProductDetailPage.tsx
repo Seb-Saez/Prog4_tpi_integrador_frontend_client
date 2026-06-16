@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import type { Producto } from "../types/producto";
 import type { Ingrediente } from "../types/ingrediente";
 import { useCartStore } from "../../cart/store/cartStore";
 import TiendaIngredienteCard from "../components/TiendaIngredienteCard";
@@ -14,6 +15,7 @@ const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const addItem = useCartStore((s) => s.addItem);
   const [imgError, setImgError] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(0);
 
   const productoQuery = useProducto(id);
   const categoriasQuery = useCategorias();
@@ -47,7 +49,8 @@ const ProductDetailPage = () => {
     .map((iid) => ingredientes.find((i) => i.id === iid))
     .filter(Boolean) as Ingrediente[];
 
-  const showPlaceholder = !producto.imagenes_url || imgError;
+  const allImages = producto.imagenes_url ?? [];
+  const showPlaceholder = allImages.length === 0 || imgError;
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -71,12 +74,30 @@ const ProductDetailPage = () => {
                 </span>
               </div>
             ) : (
-              <img
-                src={producto.imagenes_url}
-                alt={producto.nombre}
-                className="h-full w-full object-cover"
-                onError={() => setImgError(true)}
-              />
+              <div className="h-full w-full">
+                <img
+                  src={allImages[selectedImg]}
+                  alt={producto.nombre}
+                  className="h-full w-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+                {allImages.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {allImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => { setSelectedImg(idx); setImgError(false); }}
+                        className={`w-2.5 h-2.5 rounded-full transition-all ${
+                          idx === selectedImg
+                            ? "bg-white scale-110 shadow-md"
+                            : "bg-white/50 hover:bg-white/70"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
