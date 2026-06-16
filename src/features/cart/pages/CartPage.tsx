@@ -14,6 +14,10 @@ const CartPage = () => {
   const total = useCartStore((s) => s.total);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
+  const hasUnavailableItems = items.some(
+    (item) => !item.producto.disponible || item.producto.stock_cantidad === 0,
+  );
+
   // Gate de checkout: el carrito se arma sin sesión, pero confirmar requiere login.
   // Mandamos al login guardando el origen para volver al carrito tras autenticar.
   const handleConfirm = () => {
@@ -98,6 +102,11 @@ const CartPage = () => {
               <p className="text-sm text-stone-500">
                 ${item.producto.precio_base.toFixed(2)} c/u
               </p>
+              {(!item.producto.disponible || item.producto.stock_cantidad === 0) && (
+                <span className="mt-1 inline-block px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full">
+                  {!item.producto.disponible ? "No disponible" : "Sin stock"}
+                </span>
+              )}
             </div>
 
             {/* Stepper de cantidad */}
@@ -159,9 +168,15 @@ const CartPage = () => {
             ${total().toFixed(2)}
           </span>
         </div>
+        {hasUnavailableItems && (
+          <p className="mb-3 rounded-xl bg-red-50 border border-red-100 px-4 py-2.5 text-sm text-red-700">
+            Hay productos sin stock o no disponibles. Removelos para continuar.
+          </p>
+        )}
         <button
           onClick={handleConfirm}
-          className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
+          disabled={hasUnavailableItems}
+          className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
         >
           {user ? "Confirmar pedido" : "Iniciá sesión para confirmar"}
         </button>

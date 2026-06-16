@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePedido } from "../hooks/usePedido";
 import { useCancelarPedido } from "../hooks/useCancelarPedido";
@@ -40,6 +41,9 @@ const OrderDetailPage = () => {
   useOrderStatusWS(id ? Number(id) : undefined);
   const wsStatus = usePedidoWsStore((s) => s.status);
 
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [motivo, setMotivo] = useState("");
+
   if (pedidoQuery.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -58,10 +62,16 @@ const OrderDetailPage = () => {
 
   const pedido = pedidoQuery.data;
 
-  const handleCancelar = async () => {
-    if (!confirm("¿Seguro que querés cancelar este pedido?")) return;
+  const handleOpenCancelModal = () => {
+    setMotivo("");
+    setCancelModalOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!motivo.trim()) return;
     try {
-      await cancelar.mutateAsync(pedido.id);
+      await cancelar.mutateAsync({ id: pedido.id, motivo: motivo.trim() });
+      setCancelModalOpen(false);
     } catch {
       // el hook ya invalida caches
     }
@@ -240,7 +250,7 @@ const OrderDetailPage = () => {
         {/* Acciones */}
         {pedido.estado_pedido.permite_cancelar && (
           <button
-            onClick={handleCancelar}
+            onClick={handleOpenCancelModal}
             disabled={cancelar.isPending}
             className="w-full rounded-xl border-2 border-red-200 bg-red-50 py-3 font-semibold text-red-700 transition hover:bg-red-100 active:scale-[0.99] disabled:opacity-50"
           >
@@ -248,6 +258,45 @@ const OrderDetailPage = () => {
           </button>
         )}
       </div>
+
+      {/* Modal de cancelación con motivo */}
+      {cancelModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setCancelModalOpen(false); }}
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+            <h2 className="text-lg font-bold text-stone-900 mb-1">
+              Cancelar pedido #{pedido.id}
+            </h2>
+            <p className="text-sm text-stone-500 mb-4">
+              Indicá el motivo de la cancelación. Este campo es obligatorio.
+            </p>
+            <textarea
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Ej: Me equivoqué en el pedido..."
+              rows={3}
+              className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20 resize-none"
+            />
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => setCancelModalOpen(false)}
+                className="flex-1 rounded-xl border border-stone-200 py-2.5 text-sm font-semibold text-stone-600 transition hover:bg-stone-50"
+              >
+                Volver
+              </button>
+              <button
+                onClick={handleConfirmCancel}
+                disabled={!motivo.trim() || cancelar.isPending}
+                className="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {cancelar.isPending ? "Cancelando..." : "Confirmar cancelación"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

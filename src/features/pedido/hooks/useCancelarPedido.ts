@@ -8,7 +8,7 @@ export function useCancelarPedido() {
 
   return useMutation({
     mutationFn: cancelarPedido,
-    onSuccess: (_data, id) => {
+    onSuccess: (_data, { id }) => {
       qc.invalidateQueries({ queryKey: misPedidosQueryKey });
       qc.invalidateQueries({ queryKey: pedidoQueryKey(id) });
     },

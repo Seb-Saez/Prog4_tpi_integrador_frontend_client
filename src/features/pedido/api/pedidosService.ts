@@ -15,8 +15,14 @@ export function getPedido(id: number | string) {
   return api.get<PedidoResponse>(`/pedidos/${id}`).then((r) => r.data);
 }
 
-export function cancelarPedido(id: number | string) {
+export function cancelarPedido({
+  id,
+  motivo,
+}: {
+  id: number | string;
+  motivo: string;
+}) {
   return api
-    .patch<PedidoResponse>(`/pedidos/${id}/cancelar`)
+    .delete<PedidoResponse>(`/pedidos/${id}`, { data: { motivo } })
     .then((r) => r.data);
 }

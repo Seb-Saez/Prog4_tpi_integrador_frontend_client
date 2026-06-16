@@ -102,9 +102,13 @@ const ProductDetailPage = () => {
 
           {/* Info */}
           <div className="p-6 md:p-8 md:w-1/2 flex flex-col">
-            {/* Stock badge */}
+            {/* Stock / availability badge */}
             <div className="mb-3">
-              {producto.stock_cantidad === 0 ? (
+              {!producto.disponible ? (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
+                  No disponible
+                </span>
+              ) : producto.stock_cantidad === 0 ? (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
                   Sin stock
                 </span>
@@ -153,12 +157,14 @@ const ProductDetailPage = () => {
 
               <button
                 onClick={() => addItem(producto)}
-                disabled={producto.stock_cantidad === 0}
+                disabled={!producto.disponible || producto.stock_cantidad === 0}
                 className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3.5 px-6 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
               >
-                {producto.stock_cantidad === 0
-                  ? "Sin stock"
-                  : "Agregar al carrito"}
+                {!producto.disponible
+                  ? "No disponible"
+                  : producto.stock_cantidad === 0
+                    ? "Sin stock"
+                    : "Agregar al carrito"}
               </button>
             </div>
           </div>

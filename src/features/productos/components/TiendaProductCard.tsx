@@ -61,9 +61,9 @@ const TiendaProductCard = ({
       )}
       <div className="p-5">
         <div className="flex flex-wrap items-center gap-1.5 mb-2">
-          {producto.stock_cantidad === 0 ? (
+          {!producto.disponible || producto.stock_cantidad === 0 ? (
             <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full">
-              Sin stock
+              {!producto.disponible ? "No disponible" : "Sin stock"}
             </span>
           ) : producto.stock_cantidad <= 5 ? (
             <span className="inline-block px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full">
