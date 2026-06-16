@@ -1,15 +1,28 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import CheckoutModal from "../components/CheckoutModal";
 import { ROUTES } from "@/router/routes";
 
 const CartPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const items = useCartStore((s) => s.items);
   const updateCantidad = useCartStore((s) => s.updateCantidad);
   const removeItem = useCartStore((s) => s.removeItem);
   const total = useCartStore((s) => s.total);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  // Gate de checkout: el carrito se arma sin sesión, pero confirmar requiere login.
+  // Mandamos al login guardando el origen para volver al carrito tras autenticar.
+  const handleConfirm = () => {
+    if (!user) {
+      navigate(ROUTES.INGRESAR, { state: { from: { pathname: ROUTES.CARRITO } } });
+      return;
+    }
+    setCheckoutOpen(true);
+  };
 
   if (items.length === 0) {
     return (
@@ -147,10 +160,10 @@ const CartPage = () => {
           </span>
         </div>
         <button
-          onClick={() => setCheckoutOpen(true)}
+          onClick={handleConfirm}
           className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
         >
-          Confirmar pedido
+          {user ? "Confirmar pedido" : "Iniciá sesión para confirmar"}
         </button>
         <Link
           to={ROUTES.INICIO}
@@ -160,7 +173,11 @@ const CartPage = () => {
         </Link>
       </div>
 
-      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      {/* Solo se monta con sesión: el modal dispara GET /direcciones y un invitado
+          sería expulsado por el interceptor 401. El gate ya manda a login antes. */}
+      {user && (
+        <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      )}
     </div>
   );
 };

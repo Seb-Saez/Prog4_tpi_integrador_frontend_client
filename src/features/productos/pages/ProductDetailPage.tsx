@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import type { Producto } from "../types/producto";
 import type { Ingrediente } from "../types/ingrediente";
 import { useCartStore } from "../../cart/store/cartStore";
 import TiendaIngredienteCard from "../components/TiendaIngredienteCard";

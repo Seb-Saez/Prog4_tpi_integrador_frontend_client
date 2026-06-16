@@ -11,6 +11,7 @@ import { RequireCliente } from "@/features/auth/guards/RequireCliente";
 import { GuestOnly } from "@/features/auth/guards/GuestOnly";
 
 // páginas
+import HomePage from "@/features/productos/pages/HomePage";
 import ProductListPage from "@/features/productos/pages/ProductListPage";
 import ProductDetailPage from "@/features/productos/pages/ProductDetailPage";
 import CategoriesPage from "@/features/categorias/pages/CategoriesPage";
@@ -27,16 +28,20 @@ import PagoResultadoPage from "@/features/pago/pages/PagoResultadoPage";
 export function AppRouter() {
   return (
     <Routes>
-      {/* Rutas protegidas - Requieren sesión (RequireAuth) y rol CLIENTE (RequireCliente) */}
-      <Route element={<RequireAuth />}>
-        <Route element={<RequireCliente />}>
-          <Route element={<MainLayout />}>
-            <Route path={ROUTES.INICIO} element={<ProductListPage />} />
-            <Route path={ROUTES.PRODUCTOS} element={<ProductListPage />} />
-            <Route path={ROUTES.PRODUCTO_DETALLE} element={<ProductDetailPage />} />
-            <Route path={ROUTES.CATEGORIAS} element={<CategoriesPage />} />
-            <Route path={ROUTES.CATEGORIA_DETALLE} element={<CategoryDetailPage />} />
-            <Route path={ROUTES.CARRITO} element={<CartPage />} />
+      {/* Storefront — MainLayout compartido para invitados y clientes. */}
+      <Route element={<MainLayout />}>
+        {/* Públicas — navegación de invitado: catálogo y carrito sin sesión. */}
+        <Route path={ROUTES.INICIO} element={<HomePage />} />
+        <Route path={ROUTES.PRODUCTOS} element={<ProductListPage />} />
+        <Route path={ROUTES.PRODUCTO_DETALLE} element={<ProductDetailPage />} />
+        <Route path={ROUTES.CATEGORIAS} element={<CategoriesPage />} />
+        <Route path={ROUTES.CATEGORIA_DETALLE} element={<CategoryDetailPage />} />
+        <Route path={ROUTES.CARRITO} element={<CartPage />} />
+
+        {/* Protegidas — requieren sesión (RequireAuth) y rol CLIENTE (RequireCliente).
+            El gate de checkout vive en CartPage: el carrito se arma como invitado. */}
+        <Route element={<RequireAuth />}>
+          <Route element={<RequireCliente />}>
             <Route path={ROUTES.PEDIDOS} element={<OrdersPage />} />
             <Route path={ROUTES.PEDIDO_DETALLE} element={<OrderDetailPage />} />
             <Route path={ROUTES.DIRECCIONES} element={<DireccionesPage />} />

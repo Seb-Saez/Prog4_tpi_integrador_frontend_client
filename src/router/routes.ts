@@ -6,8 +6,7 @@ export const ROUTES = {
     CARRITO: "/carrito",
     CATEGORIAS: "/categorias",
     CATEGORIA_DETALLE: "/categorias/:id",
-    // Protegidas (requieren sesión)
-    REALIZAR_PEDIDO: "/realizar-pedido",
+    // Protegidas (requieren sesión + rol CLIENTE)
     PEDIDOS: "/pedidos",
     PEDIDO_DETALLE: "/pedidos/:id",
     DIRECCIONES: "/direcciones",
