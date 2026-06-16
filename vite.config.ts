@@ -12,7 +12,7 @@ export default defineConfig({
   },
     server: {
     // Add the specific hostnames you want to allow
-    allowedHosts: ['823a-191-81-176-225.ngrok-free.app', 'aa96-191-81-176-225.ngrok-free.app', 'localhost'],
+    allowedHosts: ['.ngrok-free.app', 'localhost'],
   }
 
 })
