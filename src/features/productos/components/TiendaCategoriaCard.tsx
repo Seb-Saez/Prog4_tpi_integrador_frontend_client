@@ -4,6 +4,8 @@ import type { Categoria } from "../types/categoria";
 import { categoriaDetalle } from "@/router/routes";
 type TiendaCategoriaCardProps = {
   categoria: Categoria;
+  /** Nombre de la categoría madre. Presente solo si esta es una subcategoría. */
+  parentNombre?: string | null;
 };
 const placeholderGradient = (name: string) => {
   const colors = [
@@ -17,9 +19,10 @@ const placeholderGradient = (name: string) => {
   const hash = name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
-const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
+const TiendaCategoriaCard = ({ categoria, parentNombre }: TiendaCategoriaCardProps) => {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !categoria.imagen_url || imgError;
+  const esSubcategoria = categoria.parent_id != null;
   return (
     <Link
       to={categoriaDetalle(categoria.id)}
@@ -44,6 +47,12 @@ const TiendaCategoriaCard = ({ categoria }: TiendaCategoriaCardProps) => {
         </div>
       )}
       <div className="p-5">
+        {esSubcategoria && (
+          <span className="inline-flex items-center gap-1 mb-2 px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-xs font-semibold ring-1 ring-indigo-100">
+            <span aria-hidden="true">↳</span>
+            {parentNombre ? `de ${parentNombre}` : "Subcategoría"}
+          </span>
+        )}
         <h3 className="text-lg font-bold text-gray-900 mb-1">
           {categoria.nombre}
         </h3>
