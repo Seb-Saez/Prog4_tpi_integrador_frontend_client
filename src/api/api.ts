@@ -1,12 +1,12 @@
 import axios from "axios";
-
-export const API_BASE =
-  import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+import { env } from "../config/env";
+export const API_BASE = env.apiUrl;
 
 const api = axios.create({
   baseURL: API_BASE,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
   withCredentials: true,
   timeout: 5000,

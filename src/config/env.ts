@@ -1,3 +1,4 @@
 export const env = {
-    apiUrl: import.meta.env.VITE_API_URL || "http://localhost:8000",
+    apiUrl: import.meta.env.VITE_APP_ENV === "prod" ? import.meta.env.VITE_API_URL : "http://localhost:8000/api/v1",
+    wsUrl: import.meta.env.VITE_APP_ENV === "prod" ? import.meta.env.VITE_WS_URL : "ws://localhost:8000/ws/pedidos",
 }

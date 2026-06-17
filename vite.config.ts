@@ -10,4 +10,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+    server: {
+    // Add the specific hostnames you want to allow
+    allowedHosts: ['.ngrok-free.app', 'localhost'],
+  }
+
 })

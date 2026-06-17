@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useCategoria } from "@/features/products/hooks/useCategoria";
-import { useProductos } from "@/features/products/hooks/useProductos";
-import { useCategorias } from "@/features/products/hooks/useCategoria";
-import TiendaProductCard from "@/features/products/components/TiendaProductCard";
+import { useCategoria } from "@/features/productos/hooks/useCategoria";
+import { useProductos } from "@/features/productos/hooks/useProductos";
+import { useCategorias } from "@/features/productos/hooks/useCategoria";
+import TiendaProductCard from "@/features/productos/components/TiendaProductCard";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/router/routes";
 const CategoryDetailPage = () => {

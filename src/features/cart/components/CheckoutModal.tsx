@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
-import { useCrearPedido } from "@/features/orders/hooks/useCrearPedido";
+import { useCrearPedido } from "@/features/pedido/hooks/useCrearPedido";
 import { useDirecciones } from "@/features/direcciones/hooks/useDirecciones";
+import { crearPreferencia } from "@/features/pago/api/pagoService";
 import { ROUTES } from "@/router/routes";
-import type { PedidoCreate, ModalidadEntrega } from "@/features/orders/types/pedido";
+import type { PedidoCreate, ModalidadEntrega } from "@/features/pedido/types/pedido";
 
 const FORMAS_PAGO = [
   { id: 1, nombre: "Efectivo" },
@@ -27,6 +28,7 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
   const [direccionId, setDireccionId] = useState<number | "">("");
   const [notas, setNotas] = useState("");
   const [error, setError] = useState("");
+  const [redirecting, setRedirecting] = useState(false);
 
   const crearPedido = useCrearPedido();
   const direccionesQuery = useDirecciones();
@@ -75,11 +77,20 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
     };
 
     try {
-      await crearPedido.mutateAsync(payload);
+      const pedido = await crearPedido.mutateAsync(payload);
+
       clearCart();
       onClose();
-      navigate(ROUTES.PEDIDOS);
+
+      if (formaPagoId === 3) {
+        setRedirecting(true);
+        const pref = await crearPreferencia(pedido.id);
+        window.location.href = pref.init_point;
+      } else {
+        navigate(ROUTES.PEDIDOS);
+      }
     } catch (err: any) {
+      setRedirecting(false);
       const msg = err?.response?.data?.detail || err?.message || "Error al crear el pedido.";
       setError(Array.isArray(msg) ? msg[0]?.msg || JSON.stringify(msg) : msg);
     }
@@ -89,6 +100,14 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Loader de redirección a MercadoPago */}
+      {redirecting && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-white/95">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+          <p className="text-sm font-semibold text-stone-700">Redirigiendo a MercadoPago...</p>
+        </div>
+      )}
 
       {/* Modal */}
       <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto">
@@ -241,10 +260,10 @@ export default function CheckoutModal({ open, onClose }: CheckoutModalProps) {
         {/* Botón */}
         <button
           onClick={handleSubmit}
-          disabled={crearPedido.isPending}
+          disabled={crearPedido.isPending || redirecting}
           className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3.5 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {crearPedido.isPending ? "Procesando..." : "Confirmar pedido"}
+          {redirecting ? "Redirigiendo..." : crearPedido.isPending ? "Procesando..." : "Confirmar pedido"}
         </button>
       </div>
     </div>

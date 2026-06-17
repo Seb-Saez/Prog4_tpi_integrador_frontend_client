@@ -32,9 +32,13 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         `}
       >
         <div className="p-4 border-b border-stone-200/70">
-          <span className="font-display text-xl font-semibold tracking-tight text-stone-900">
+          <NavLink
+            to={ROUTES.INICIO}
+            onClick={onClose}
+            className="font-display text-xl font-semibold tracking-tight text-stone-900 transition-colors hover:text-orange-600"
+          >
             Food<span className="text-orange-500">Store</span>
-          </span>
+          </NavLink>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           <NavLink

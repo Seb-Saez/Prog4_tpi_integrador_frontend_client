@@ -1,5 +1,5 @@
-import { useCategorias } from "@/features/products/hooks/useCategoria";
-import TiendaCategoriaCard from "@/features/products/components/TiendaCategoriaCard";
+import { useCategorias } from "@/features/productos/hooks/useCategoria";
+import TiendaCategoriaCard from "@/features/productos/components/TiendaCategoriaCard";
 const CategoriesPage = () => {
   const categoriasQuery = useCategorias();
   if (categoriasQuery.isLoading) {
@@ -17,6 +17,8 @@ const CategoriesPage = () => {
     );
   }
   const categorias = Array.isArray(categoriasQuery.data) ? categoriasQuery.data : [];
+  // Mapa id → nombre para resolver el nombre de la madre de cada subcategoría.
+  const nombrePorId = new Map(categorias.map((c) => [c.id, c.nombre]));
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
@@ -31,7 +33,15 @@ const CategoriesPage = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {categorias.map((categoria) => (
-            <TiendaCategoriaCard key={categoria.id} categoria={categoria} />
+            <TiendaCategoriaCard
+              key={categoria.id}
+              categoria={categoria}
+              parentNombre={
+                categoria.parent_id != null
+                  ? nombrePorId.get(categoria.parent_id) ?? null
+                  : null
+              }
+            />
           ))}
         </div>
       )}

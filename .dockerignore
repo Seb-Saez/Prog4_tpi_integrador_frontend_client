@@ -1,0 +1,12 @@
+# Never copy host deps/build into the image — pnpm install runs inside the build.
+node_modules
+.pnpm-store
+dist
+.git
+.gitignore
+*.log
+.env.local
+.DS_Store
+Dockerfile
+.dockerignore
+package-lock.json

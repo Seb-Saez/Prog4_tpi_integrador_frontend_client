@@ -1,15 +1,32 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../store/cartStore";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import CheckoutModal from "../components/CheckoutModal";
 import { ROUTES } from "@/router/routes";
 
 const CartPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const items = useCartStore((s) => s.items);
   const updateCantidad = useCartStore((s) => s.updateCantidad);
   const removeItem = useCartStore((s) => s.removeItem);
   const total = useCartStore((s) => s.total);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  const hasUnavailableItems = items.some(
+    (item) => !item.producto.disponible || item.producto.stock_cantidad === 0,
+  );
+
+  // Gate de checkout: el carrito se arma sin sesión, pero confirmar requiere login.
+  // Mandamos al login guardando el origen para volver al carrito tras autenticar.
+  const handleConfirm = () => {
+    if (!user) {
+      navigate(ROUTES.INGRESAR, { state: { from: { pathname: ROUTES.CARRITO } } });
+      return;
+    }
+    setCheckoutOpen(true);
+  };
 
   if (items.length === 0) {
     return (
@@ -64,9 +81,9 @@ const CartPage = () => {
             className="flex items-center gap-4 rounded-2xl border border-stone-200/70 bg-white p-4 shadow-sm"
           >
             {/* Miniatura: imagen real o inicial */}
-            {item.producto.imagenes_url ? (
+            {item.producto.imagenes_url?.[0] ? (
               <img
-                src={item.producto.imagenes_url}
+                src={item.producto.imagenes_url[0]}
                 alt={item.producto.nombre}
                 className="h-16 w-16 flex-shrink-0 rounded-xl object-cover"
               />
@@ -85,6 +102,11 @@ const CartPage = () => {
               <p className="text-sm text-stone-500">
                 ${item.producto.precio_base.toFixed(2)} c/u
               </p>
+              {(!item.producto.disponible || item.producto.stock_cantidad === 0) && (
+                <span className="mt-1 inline-block px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded-full">
+                  {!item.producto.disponible ? "No disponible" : "Sin stock"}
+                </span>
+              )}
             </div>
 
             {/* Stepper de cantidad */}
@@ -146,11 +168,17 @@ const CartPage = () => {
             ${total().toFixed(2)}
           </span>
         </div>
+        {hasUnavailableItems && (
+          <p className="mb-3 rounded-xl bg-red-50 border border-red-100 px-4 py-2.5 text-sm text-red-700">
+            Hay productos sin stock o no disponibles. Removelos para continuar.
+          </p>
+        )}
         <button
-          onClick={() => setCheckoutOpen(true)}
-          className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99]"
+          onClick={handleConfirm}
+          disabled={hasUnavailableItems}
+          className="w-full rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-105 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
         >
-          Confirmar pedido
+          {user ? "Confirmar pedido" : "Iniciá sesión para confirmar"}
         </button>
         <Link
           to={ROUTES.INICIO}
@@ -160,7 +188,11 @@ const CartPage = () => {
         </Link>
       </div>
 
-      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      {/* Solo se monta con sesión: el modal dispara GET /direcciones y un invitado
+          sería expulsado por el interceptor 401. El gate ya manda a login antes. */}
+      {user && (
+        <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      )}
     </div>
   );
 };
