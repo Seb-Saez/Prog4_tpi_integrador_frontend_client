@@ -9,6 +9,11 @@ Este repositorio contiene el frontend del cliente de la materia **Programación 
 - Gonzalez Ezequiel
 - Saez Sebastian
 
+# Link al video
+[![Video de presentación](https://img.youtube.com/vi/00k1g5J8X4/0.jpg)](https://youtu.be/9mZBAH2CmGo)
+
+
+
 ## Instrucciones para correr el frontend de cliente
 
 1. Levantar el backend.
